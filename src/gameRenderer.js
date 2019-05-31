@@ -9,6 +9,11 @@ function createCellElement(cell) {
     return el;
 }
 
+const defaultOptions = {
+    interval: 300,
+    cellSize: 10
+};
+
 /**
  * 
  * @param {HTMLElement} el 
@@ -18,47 +23,56 @@ function createCellElement(cell) {
  * @param {number} options.interval
  */
 function renderer(el, game, options = {}) {
-    const {
-        interval = 300,
-        cellSize = 10
-    } = options;
-
+    let opts;
     let isDrawing = false;
     let drawItems = {};
     let intervalHandle;
 
-    el.style = `--cell-size: ${+cellSize}px;`;
+    function init() {
+        el.style = `--cell-size: ${+opts.cellSize}px;`;
 
-    el.addEventListener('mousedown', function(e) {
-        isDrawing = true;
-    });
-
-    el.addEventListener('mousemove', function(e) {
-        if (!isDrawing) return;
-
-        const {x, y} = e;
-        const coords = [Math.floor(x / cellSize), Math.floor(y / cellSize)];
-        const cell = new Cell(coords, 1);
-
-        if (!drawItems[cell.key]) {
-            const cellEl = createCellElement(cell);
-            cellEl.classList.add('dry');
-            el.appendChild(cellEl);
-
-            drawItems[cell.key] = { cell, cellEl };
-        }
-    });
-
-    el.addEventListener('mouseup', function(e) {
-        isDrawing = false;
-
-        Object.values(drawItems).forEach(({ cell, cellEl }) => {
-            cellEl.classList.add('live');
-
-            game.add(cell)
+        el.addEventListener('mousedown', function(e) {
+            isDrawing = true;
         });
-        drawItems = {};
-    });
+
+        el.addEventListener('mousemove', function(e) {
+            if (!isDrawing) return;
+
+            const {x, y} = e;
+            const coords = [Math.floor(x / opts.cellSize), Math.floor(y / opts.cellSize)];
+            const cell = new Cell(coords, 1);
+
+            if (!drawItems[cell.key]) {
+                const cellEl = createCellElement(cell);
+                cellEl.classList.add('dry');
+                el.appendChild(cellEl);
+
+                drawItems[cell.key] = { cell, cellEl };
+            }
+        });
+
+        el.addEventListener('mouseup', function(e) {
+            isDrawing = false;
+
+            Object.values(drawItems).forEach(({ cell, cellEl }) => {
+                cellEl.classList.add('live');
+
+                game.add(cell)
+            });
+            drawItems = {};
+        });
+
+        document.addEventListener('visibilitychange', function(e) {
+            switch(document.visibilityState) {
+                case 'visible': {
+                    return start();
+                }
+                case 'hidden': {
+                    return stop();
+                }
+            }
+        }, true);
+    }
 
     function update() {
         el.querySelectorAll('.cell.live').forEach(child => el.removeChild(child));
@@ -79,7 +93,7 @@ function renderer(el, game, options = {}) {
 
             game.tick();
             requestAnimationFrame(update);
-        }, interval);
+        }, opts.interval);
 
         return intervalHandle;
     }
@@ -88,18 +102,26 @@ function renderer(el, game, options = {}) {
         clearInterval(intervalHandle);
     }
 
-    document.addEventListener('visibilitychange', function(e) {
-        switch(document.visibilityState) {
-            case 'visible': {
-                return start();
-            }
-            case 'hidden': {
-                return stop();
-            }
-        }
-    }, true);
+    function setSpeed(interval) {
+        opts.interval = interval;
 
-    return start();
+        stop();
+        start();
+    }
+
+    function setOptions(options) {
+        opts =  {...defaultOptions, ...options};
+    }
+
+    setOptions(options);
+    init();
+    start();
+
+    return {
+        start,
+        stop,
+        setSpeed,
+    }
 }
 
 export default renderer;
