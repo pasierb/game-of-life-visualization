@@ -77,14 +77,17 @@ function renderer(el, game, options = {}) {
   }
 
   function update() {
-    el.querySelectorAll('.cell.live').forEach((child) => el.removeChild(child));
+    const fragment = document.createDocumentFragment();
 
     for (const cell of game) {
       const cellEl = createCellElement(cell);
 
       cellEl.classList.add('live');
-      el.appendChild(cellEl);
+      fragment.appendChild(cellEl);
     }
+
+    el.innerHTML = '';
+    el.appendChild(fragment);
   }
 
   function start() {
