@@ -1,6 +1,6 @@
-import { GUI } from 'dat.gui';
+import {GUI} from 'dat.gui';
 
-import Game, { Cell } from './Game';
+import Game from './Game';
 import render from './gameRenderer';
 
 import './style.scss';
@@ -8,22 +8,18 @@ import './style.scss';
 const game = new Game();
 const gui = new GUI();
 const options = {
-    cellSize: 10,
-    interval: 300
-}
+  cellSize: 10,
+  interval: 300,
+};
 
 window.addEventListener('load', function() {
-    const root = document.getElementById('plain');
-    const { setSpeed, start, stop } = render(root, game, options);
-    const state = { paused: false };
+  const root = document.getElementById('plain');
+  const {setSpeed, start, stop} = render(root, game, options);
+  const state = {paused: false};
 
-    gui.add(options, 'interval', 100, 1000, 100).onFinishChange(setSpeed);
-    gui.add({ reset: () => game.reset() }, 'reset');
-    gui.add(state, 'paused').onFinishChange((isPaused) => {
-        if (isPaused) {
-            stop();
-        } else {
-            start();
-        }
-    });
+  gui.add(options, 'interval', 100, 1000, 100).onFinishChange(setSpeed);
+  gui.add({reset: () => game.reset()}, 'reset');
+  gui.add(state, 'paused').onFinishChange((isPaused) => {
+    isPaused ? stop() : start();
+  });
 });
