@@ -6,7 +6,7 @@ This project aims to provide visually appealing, interactive "game of life" simu
 
 - [x] infinite plain
 - [x] editor
-- [ ] animated state transitions
+- [ ] ~~animated state transitions~~
 - [x] live interactions
   - [ ] zoom/pan controls
   - [x] set/unset "walls"
