@@ -3024,13 +3024,13 @@ var index = {
 };
 var _default = index;
 exports.default = _default;
-},{}],"src/Game.js":[function(require,module,exports) {
+},{}],"src/Cell.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.Cell = void 0;
+exports.default = void 0;
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
@@ -3049,11 +3049,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var Cell =
 /*#__PURE__*/
 function () {
-  /**
-   * 
-   * @param {Array<number>} coords 
-   * @param {number} state 
-   */
   function Cell(coords) {
     var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
@@ -3085,7 +3080,33 @@ function () {
   return Cell;
 }();
 
-exports.Cell = Cell;
+var _default = Cell;
+exports.default = _default;
+},{}],"src/Game.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _Cell = _interopRequireDefault(require("./Cell"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 var Game =
 /*#__PURE__*/
@@ -3121,13 +3142,13 @@ function () {
     value: function getNeighbours(cell) {
       var _this = this;
 
-      return [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]].map(function (_ref3) {
-        var _ref4 = _slicedToArray(_ref3, 2),
-            offsetX = _ref4[0],
-            offsetY = _ref4[1];
+      return [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]].map(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+            offsetX = _ref2[0],
+            offsetY = _ref2[1];
 
         var coords = [cell.x + offsetX, cell.y + offsetY];
-        return _this._plain.get(Cell.key(coords)) || new Cell(coords, 0);
+        return _this._plain.get(_Cell.default.key(coords)) || new _Cell.default(coords, 0);
       });
     }
   }, {
@@ -3147,9 +3168,9 @@ function () {
           cell: cell,
           neighboursCount: _this2.getNeighboursCount(cell)
         };
-      }).forEach(function (_ref5) {
-        var cell = _ref5.cell,
-            count = _ref5.neighboursCount;
+      }).forEach(function (_ref3) {
+        var cell = _ref3.cell,
+            count = _ref3.neighboursCount;
 
         if (cell.state === 1 && (count < 2 || count > 3)) {
           cell.state = 0;
@@ -3204,7 +3225,7 @@ function () {
 }();
 
 exports.default = Game;
-},{}],"src/gameRenderer.js":[function(require,module,exports) {
+},{"./Cell":"src/Cell.js"}],"src/gameRenderer.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3212,7 +3233,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _Game = require("./Game");
+var _Cell = _interopRequireDefault(require("./Cell"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
@@ -3230,12 +3253,13 @@ var defaultOptions = {
   cellSize: 10
 };
 /**
- * 
- * @param {HTMLElement} el 
- * @param {Game} game 
- * @param {object} options 
+ *
+ * @param {HTMLElement} el
+ * @param {Game} game
+ * @param {object} options
  * @param {number} options.cellSize
  * @param {number} options.interval
+ * @return {Void}
  */
 
 function renderer(el, game) {
@@ -3258,7 +3282,7 @@ function renderer(el, game) {
       var x = e.x,
           y = e.y;
       var coords = [Math.floor(x / opts.cellSize), Math.floor(y / opts.cellSize)];
-      var cell = new _Game.Cell(coords, 1);
+      var cell = new _Cell.default(coords, 1);
 
       if (!drawItems[cell.key]) {
         var cellEl = createCellElement(cell);
@@ -3354,7 +3378,7 @@ function renderer(el, game) {
 
 var _default = renderer;
 exports.default = _default;
-},{"./Game":"src/Game.js"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{"./Cell":"src/Cell.js"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -3431,15 +3455,13 @@ module.hot.accept(reloadCSS);
 
 var _dat = require("dat.gui");
 
-var _Game = _interopRequireWildcard(require("./Game"));
+var _Game = _interopRequireDefault(require("./Game"));
 
 var _gameRenderer = _interopRequireDefault(require("./gameRenderer"));
 
 require("./style.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
 var game = new _Game.default();
 var gui = new _dat.GUI();
@@ -3465,11 +3487,7 @@ window.addEventListener('load', function () {
     }
   }, 'reset');
   gui.add(state, 'paused').onFinishChange(function (isPaused) {
-    if (isPaused) {
-      stop();
-    } else {
-      start();
-    }
+    isPaused ? stop() : start();
   });
 });
 },{"dat.gui":"node_modules/dat.gui/build/dat.gui.module.js","./Game":"src/Game.js","./gameRenderer":"src/gameRenderer.js","./style.scss":"src/style.scss"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
@@ -3500,7 +3518,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43129" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39369" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
