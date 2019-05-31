@@ -20,7 +20,7 @@ export class Cell {
 
 export default class Game {
     constructor() {
-        this._plain = new Map();
+        this.reset();
     }
 
     add(cell) {
@@ -31,8 +31,12 @@ export default class Game {
         this._plain.delete(cell.key);
     }
 
+    reset() {
+        this._plain = new Map();
+    }
+
     [Symbol.iterator]() {
-        return this._plain.entries();
+        return this._plain.values();
     }
 
     get activeCells() {

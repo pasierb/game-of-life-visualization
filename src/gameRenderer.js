@@ -23,7 +23,7 @@ const defaultOptions = {
  * @param {number} options.interval
  */
 function renderer(el, game, options = {}) {
-    let opts;
+    let opts = {...defaultOptions, ...options};
     let isDrawing = false;
     let drawItems = {};
     let intervalHandle;
@@ -77,7 +77,7 @@ function renderer(el, game, options = {}) {
     function update() {
         el.querySelectorAll('.cell.live').forEach(child => el.removeChild(child));
 
-        for(let [key, cell] of game) {
+        for(let cell of game) {
             const cellEl = createCellElement(cell);
 
             cellEl.classList.add('live');
@@ -109,11 +109,6 @@ function renderer(el, game, options = {}) {
         start();
     }
 
-    function setOptions(options) {
-        opts =  {...defaultOptions, ...options};
-    }
-
-    setOptions(options);
     init();
     start();
 

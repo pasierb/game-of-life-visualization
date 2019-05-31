@@ -14,8 +14,8 @@ const options = {
 
 window.addEventListener('load', function() {
     const root = document.getElementById('plain');
-
     const { setSpeed } = render(root, game, options);
 
     gui.add(options, 'interval', 100, 1000, 100).onFinishChange(setSpeed);
+    gui.add({ reset: () => game.reset() }, 'reset');
 });

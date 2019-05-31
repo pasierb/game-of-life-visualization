@@ -3093,7 +3093,7 @@ function () {
   function Game() {
     _classCallCheck(this, Game);
 
-    this._plain = new Map();
+    this.reset();
   }
 
   _createClass(Game, [{
@@ -3107,9 +3107,14 @@ function () {
       this._plain.delete(cell.key);
     }
   }, {
+    key: "reset",
+    value: function reset() {
+      this._plain = new Map();
+    }
+  }, {
     key: Symbol.iterator,
     value: function value() {
-      return this._plain.entries();
+      return this._plain.values();
     }
   }, {
     key: "getNeighbours",
@@ -3213,14 +3218,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
-
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 function createCellElement(cell) {
   var el = document.createElement('div');
   el.className = 'cell';
@@ -3243,7 +3240,9 @@ var defaultOptions = {
 
 function renderer(el, game) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var opts;
+
+  var opts = _objectSpread({}, defaultOptions, options);
+
   var isDrawing = false;
   var drawItems = {};
   var intervalHandle;
@@ -3305,10 +3304,7 @@ function renderer(el, game) {
 
     try {
       for (var _iterator = game[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var _step$value = _slicedToArray(_step.value, 2),
-            key = _step$value[0],
-            cell = _step$value[1];
-
+        var cell = _step.value;
         var cellEl = createCellElement(cell);
         cellEl.classList.add('live');
         el.appendChild(cellEl);
@@ -3349,11 +3345,6 @@ function renderer(el, game) {
     start();
   }
 
-  function setOptions(options) {
-    opts = _objectSpread({}, defaultOptions, options);
-  }
-
-  setOptions(options);
   init();
   start();
   return {
@@ -3465,6 +3456,11 @@ window.addEventListener('load', function () {
       setSpeed = _render.setSpeed;
 
   gui.add(options, 'interval', 100, 1000, 100).onFinishChange(setSpeed);
+  gui.add({
+    reset: function reset() {
+      return game.reset();
+    }
+  }, 'reset');
 });
 },{"dat.gui":"node_modules/dat.gui/build/dat.gui.module.js","./Game":"src/Game.js","./gameRenderer":"src/gameRenderer.js","./style.scss":"src/style.scss"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
