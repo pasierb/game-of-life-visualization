@@ -3246,6 +3246,7 @@ function renderer(el, game) {
   var isDrawing = false;
   var drawItems = {};
   var intervalHandle;
+  var isRunning = false;
 
   function init() {
     el.style = "--cell-size: ".concat(+opts.cellSize, "px;");
@@ -3280,10 +3281,10 @@ function renderer(el, game) {
       drawItems = {};
     });
     document.addEventListener('visibilitychange', function (e) {
-      if (document.visibilityState === 'visible') {
+      if (isRunning && document.visibilityState === 'visible') {
         start();
       } else {
-        stop();
+        stop(isRunning);
       }
     }, true);
   }
@@ -3321,16 +3322,19 @@ function renderer(el, game) {
 
   function start() {
     stop();
+    isRunning = true;
     intervalHandle = setInterval(function () {
       if (isDrawing) return;
       game.tick();
       requestAnimationFrame(update);
     }, opts.interval);
-    return intervalHandle;
   }
 
   function stop() {
+    var flag = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+    isRunning = flag;
     clearInterval(intervalHandle);
+    intervalHandle = null;
   }
 
   function setSpeed(interval) {

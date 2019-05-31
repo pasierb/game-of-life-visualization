@@ -27,6 +27,7 @@ function renderer(el, game, options = {}) {
     let isDrawing = false;
     let drawItems = {};
     let intervalHandle;
+    let isRunning = false;
 
     function init() {
         el.style = `--cell-size: ${+opts.cellSize}px;`;
@@ -63,10 +64,10 @@ function renderer(el, game, options = {}) {
         });
 
         document.addEventListener('visibilitychange', function(e) {
-            if(document.visibilityState === 'visible') {
+            if(isRunning && document.visibilityState === 'visible') {
                 start();
             } else {
-                stop();
+                stop(isRunning);
             }
         }, true);
     }
@@ -85,18 +86,19 @@ function renderer(el, game, options = {}) {
     function start() {
         stop();
 
+        isRunning = true;
         intervalHandle = setInterval(() => {
             if (isDrawing) return;
 
             game.tick();
             requestAnimationFrame(update);
         }, opts.interval);
-
-        return intervalHandle;
     }
 
-    function stop() {
+    function stop(flag = false) {
+        isRunning = flag;
         clearInterval(intervalHandle);
+        intervalHandle = null;
     }
 
     function setSpeed(interval) {
