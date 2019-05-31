@@ -20,5 +20,17 @@ body {
 
     .dry {
         background: lime;
+        animation: appear 0.1s ease-in;
+        animation-direction: forwards;
+        transform-origin: 50% 50%;
+    }
+}
+
+@keyframes appear {
+    from {
+        transform: scale(0.5);
+    }
+    to {
+        transform: scale(1);
     }
 }
