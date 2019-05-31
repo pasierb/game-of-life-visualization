@@ -2,10 +2,10 @@
   "name": "game-of-life-visualization",
   "version": "0.0.1",
   "description": "Conway's game of life visualization",
-  "main": "index.js",
+  "main": "./src/index.js",
   "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html",
+    "start": "parcel ./src/index.html",
+    "build": "parcel build ./src/index.html",
     "test": "jest"
   },
   "repository": {

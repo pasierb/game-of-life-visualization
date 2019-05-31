@@ -1,2 +1,0 @@
-.plain{position:relative}.plain .cell{width:var(--cell-size);height:var(--cell-size);background:green;position:absolute;left:calc(var(--cell-size)*var(--cell-x));top:calc(var(--cell-size)*var(--cell-y))}.plain .dry{background:#ff0}
-/*# sourceMappingURL=/src.c68b3eab.css.map */
