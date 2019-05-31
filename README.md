@@ -4,7 +4,7 @@ This project aims to provide visually appealing, interactive "game of life" simu
 
 ## Goals
 
-- [ ] infinite plain
+- [x] infinite plain
 - [ ] editor
 - [ ] animated state transitions
 - [ ] live interactions
