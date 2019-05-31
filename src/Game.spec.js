@@ -33,6 +33,15 @@ describe('Game', function() {
   });
 
   describe('#reset', function() {
+    beforeEach(function() {
+      game.add(new Cell([8, 8]));
+    });
+
+    it('should clear game from cells', function() {
+      game.reset();
+
+      expect([...game].length).toEqual(0);
+    });
   });
 
   describe('#getNeighbours', function() {});
