@@ -14,8 +14,16 @@ const options = {
 
 window.addEventListener('load', function() {
     const root = document.getElementById('plain');
-    const { setSpeed } = render(root, game, options);
+    const { setSpeed, start, stop } = render(root, game, options);
+    const state = { paused: false };
 
     gui.add(options, 'interval', 100, 1000, 100).onFinishChange(setSpeed);
     gui.add({ reset: () => game.reset() }, 'reset');
+    gui.add(state, 'paused').onFinishChange((isPaused) => {
+        if (isPaused) {
+            stop();
+        } else {
+            start();
+        }
+    });
 });

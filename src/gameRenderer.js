@@ -63,13 +63,10 @@ function renderer(el, game, options = {}) {
         });
 
         document.addEventListener('visibilitychange', function(e) {
-            switch(document.visibilityState) {
-                case 'visible': {
-                    return start();
-                }
-                case 'hidden': {
-                    return stop();
-                }
+            if(document.visibilityState === 'visible') {
+                start();
+            } else {
+                stop();
             }
         }, true);
     }

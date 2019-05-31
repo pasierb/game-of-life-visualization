@@ -3280,16 +3280,10 @@ function renderer(el, game) {
       drawItems = {};
     });
     document.addEventListener('visibilitychange', function (e) {
-      switch (document.visibilityState) {
-        case 'visible':
-          {
-            return start();
-          }
-
-        case 'hidden':
-          {
-            return stop();
-          }
+      if (document.visibilityState === 'visible') {
+        start();
+      } else {
+        stop();
       }
     }, true);
   }
@@ -3453,14 +3447,26 @@ window.addEventListener('load', function () {
   var root = document.getElementById('plain');
 
   var _render = (0, _gameRenderer.default)(root, game, options),
-      setSpeed = _render.setSpeed;
+      setSpeed = _render.setSpeed,
+      start = _render.start,
+      stop = _render.stop;
 
+  var state = {
+    paused: false
+  };
   gui.add(options, 'interval', 100, 1000, 100).onFinishChange(setSpeed);
   gui.add({
     reset: function reset() {
       return game.reset();
     }
   }, 'reset');
+  gui.add(state, 'paused').onFinishChange(function (isPaused) {
+    if (isPaused) {
+      stop();
+    } else {
+      start();
+    }
+  });
 });
 },{"dat.gui":"node_modules/dat.gui/build/dat.gui.module.js","./Game":"src/Game.js","./gameRenderer":"src/gameRenderer.js","./style.scss":"src/style.scss"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
