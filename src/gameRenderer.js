@@ -44,8 +44,6 @@ function renderer(el, game, options = {}) {
     el.addEventListener('mousemove', function(e) {
       if (!isDrawing) return;
 
-      console.log(options);
-
       const {x, y} = e;
       const coords = [
         Math.floor(x / opts.cellSize),
