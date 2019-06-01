@@ -13,11 +13,6 @@ function createCellElement(cell) {
   return el;
 }
 
-const defaultOptions = {
-  interval: 300,
-  cellSize: 10,
-};
-
 /**
  *
  * @param {HTMLElement} el
@@ -27,57 +22,86 @@ const defaultOptions = {
  * @param {number} options.interval
  * @return {Void}
  */
-function renderer(el, game, options = {}) {
-  const opts = {...defaultOptions, ...options};
+function renderer(el, game, options) {
   let isDrawing = false;
+  let drawStartCoords;
   let drawItems = {};
   let intervalHandle;
   let isRunning = false;
 
-  function init() {
-    el.style = `--cell-size: ${+opts.cellSize}px;`;
+  function eventCoords(e) {
+    const {x, y} = e;
 
-    el.addEventListener('mousedown', function(e) {
-      isDrawing = true;
-    });
+    return [
+      Math.floor(x / options.cellSize),
+      Math.floor(y / options.cellSize),
+    ];
+  }
 
-    el.addEventListener('mousemove', function(e) {
-      if (!isDrawing) return;
+  function onMouseDown(e) {
+    isDrawing = true;
+    drawStartCoords = eventCoords(e);
 
-      const {x, y} = e;
-      const coords = [
-        Math.floor(x / opts.cellSize),
-        Math.floor(y / opts.cellSize),
-      ];
-      const cell = new Cell(coords, 1, options.color);
+    el.addEventListener('mousemove', onMouseMove);
+    el.addEventListener('mouseup', onMouseUp);
+  }
 
-      if (!drawItems[cell.key]) {
-        const cellEl = createCellElement(cell);
-        cellEl.classList.add('dry');
-        el.appendChild(cellEl);
+  function onClick(e) {
+    const [x, y] = eventCoords(e);
 
-        drawItems[cell.key] = {cell, cellEl};
-      }
-    });
+    if (options.seed
+      && x === drawStartCoords[0]
+      && y === drawStartCoords[1]
+    ) {
+      drawSeed([x, y], options.seed);
+    }
+  }
 
-    el.addEventListener('mouseup', function(e) {
-      isDrawing = false;
+  function onMouseUp(e) {
+    const cellItems = Object.values(drawItems);
 
-      Object.values(drawItems).forEach(({cell, cellEl}) => {
+    if (cellItems.length > 0) {
+      cellItems.forEach(({cell, cellEl}) => {
         cellEl.classList.add('live');
 
         game.add(cell);
       });
-      drawItems = {};
-    });
 
-    document.addEventListener('visibilitychange', function(e) {
-      if (isRunning && document.visibilityState === 'visible') {
-        start();
-      } else {
-        stop(isRunning);
-      }
-    }, true);
+      drawItems = {};
+    }
+
+    el.removeEventListener('mousemove', onMouseMove);
+    el.removeEventListener('mouseup', onMouseUp);
+    isDrawing = false;
+  }
+
+  function onMouseMove(e) {
+    const coords = eventCoords(e);
+    const cell = new Cell(coords, 1, options.color);
+
+    if (!drawItems[cell.key]) {
+      const cellEl = createCellElement(cell);
+      cellEl.classList.add('dry');
+      el.appendChild(cellEl);
+
+      drawItems[cell.key] = {cell, cellEl};
+    }
+  }
+
+  function onVisibilityChange(e) {
+    if (isRunning && document.visibilityState === 'visible') {
+      start();
+    } else {
+      stop(isRunning);
+    }
+  }
+
+  function init() {
+    el.style = `--cell-size: ${+options.cellSize}px;`;
+
+    el.addEventListener('mousedown', onMouseDown);
+    el.addEventListener('click', onClick);
+    document.addEventListener('visibilitychange', onVisibilityChange, true);
   }
 
   function update() {
@@ -94,6 +118,12 @@ function renderer(el, game, options = {}) {
     el.appendChild(fragment);
   }
 
+  function drawSeed([x, y], seed) {
+    seed.forEach(([sX, sY]) => {
+      game.add(new Cell([x + sX, y + sY], 1, options.color));
+    });
+  }
+
   function start() {
     stop();
 
@@ -103,7 +133,7 @@ function renderer(el, game, options = {}) {
 
       game.tick();
       requestAnimationFrame(update);
-    }, opts.interval);
+    }, options.interval);
   }
 
   function stop(flag = false) {
@@ -113,8 +143,6 @@ function renderer(el, game, options = {}) {
   }
 
   function setSpeed(interval) {
-    opts.interval = interval;
-
     stop();
     start();
   }
@@ -126,6 +154,7 @@ function renderer(el, game, options = {}) {
     start,
     stop,
     setSpeed,
+    drawSeed,
   };
 }
 
