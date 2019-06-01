@@ -11,7 +11,7 @@ body {
         box-sizing: border-box;
         width: var(--cell-size);
         height: var(--cell-size);
-        background: lightblue;
+        background: var(--cell-color);
         position: absolute;
         left: calc(var(--cell-size) * var(--cell-x));
         top: calc(var(--cell-size) * var(--cell-y));

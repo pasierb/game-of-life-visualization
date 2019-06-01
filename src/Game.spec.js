@@ -44,7 +44,33 @@ describe('Game', function() {
     });
   });
 
-  describe('#getNeighbours', function() {});
+  describe('#getNeighbours', function() {
+    it('should return all virtual neighbouring cells', function() {
+      const cells = [
+        new Cell([1, 1]),
+      ];
+
+      cells.forEach((cell) => game.add(cell));
+
+      const neighbours = game.getNeighbours(cells[0]);
+
+      expect(neighbours.length).toEqual(8);
+    });
+
+    it('should return only actual neighbouring cells', function() {
+      const cells = [
+        new Cell([1, 1]),
+        new Cell([0, 0]),
+        new Cell([2, 0]),
+      ];
+
+      cells.forEach((cell) => game.add(cell));
+
+      const neighbours = game.getNeighbours(cells[0], true);
+
+      expect(neighbours.length).toEqual(2);
+    });
+  });
 
   describe('#getNeighboursCount', function() {});
 

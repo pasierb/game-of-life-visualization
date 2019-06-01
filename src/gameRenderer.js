@@ -4,7 +4,11 @@ function createCellElement(cell) {
   const el = document.createElement('div');
 
   el.className = 'cell';
-  el.setAttribute('style', `--cell-x: ${cell.x}; --cell-y: ${cell.y};`);
+  el.setAttribute('style', `
+    --cell-x: ${cell.x};
+    --cell-y: ${cell.y};
+    --cell-color: rgb(${(cell.color || []).join(',')});
+  `);
 
   return el;
 }
@@ -40,12 +44,14 @@ function renderer(el, game, options = {}) {
     el.addEventListener('mousemove', function(e) {
       if (!isDrawing) return;
 
+      console.log(options);
+
       const {x, y} = e;
       const coords = [
         Math.floor(x / opts.cellSize),
         Math.floor(y / opts.cellSize),
       ];
-      const cell = new Cell(coords, 1);
+      const cell = new Cell(coords, 1, options.color);
 
       if (!drawItems[cell.key]) {
         const cellEl = createCellElement(cell);
