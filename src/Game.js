@@ -35,7 +35,7 @@ export default class Game {
     return Object.values(map);
   }
 
-  getNeighbours(cell) {
+  getNeighbours(cell, onlyActual) {
     return [
       [-1, -1],
       [-1, 0],
@@ -45,32 +45,37 @@ export default class Game {
       [1, -1],
       [1, 0],
       [1, 1],
-    ].map(([offsetX, offsetY]) => {
+    ].reduce((acc, [offsetX, offsetY]) => {
       const coords = [cell.x + offsetX, cell.y + offsetY];
+      const c = this._plain.get(Cell.key(coords));
 
-      return this._plain.get(Cell.key(coords)) || new Cell(coords, 0);
-    });
-  }
+      if (onlyActual) {
+        if (c) acc.push(c);
+      } else {
+        acc.push(c || new Cell(coords, 0));
+      }
 
-  getNeighboursCount(cell) {
-    return this.getNeighbours(cell).reduce((sum, c) => c.state + sum, 0);
+      return acc;
+    }, []);
   }
 
   tick() {
     this.activeCells.map((cell) => {
+      const neighbours = this.getNeighbours(cell);
+
       return {
         cell,
-        neighboursCount: this.getNeighboursCount(cell),
+        neighbours,
+        count: neighbours.reduce((acc, n) => acc + n.state, 0),
       };
-    }).forEach(({cell, neighboursCount: count}) => {
+    }).forEach(({cell, neighbours, count}) => {
       if (cell.state === 1 && (count < 2 || count > 3)) {
-        cell.state = 0;
-
         this.remove(cell);
       }
 
       if (cell.state === 0 && count === 3) { // live
         cell.state = 1;
+        cell.color = Cell.colorFrom(neighbours);
 
         this.add(cell);
       }

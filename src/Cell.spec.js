@@ -21,6 +21,25 @@ describe('Cell', function() {
     });
   });
 
+  describe('colorFrom', function() {
+    it('should generate color provided cells', function() {
+      expect(Cell.colorFrom([
+        new Cell([], 1, [10, 10, 10]),
+        new Cell([], 1, [20, 20, 20]),
+        new Cell([], 1, [30, 30, 30]),
+      ])).toEqual([20, 20, 20]);
+    });
+
+    it('should discard dead cells', function() {
+      expect(Cell.colorFrom([
+        new Cell([], 1, [10, 10, 10]),
+        new Cell([], 0, [250, 250, 250]),
+        new Cell([], 1, [20, 20, 20]),
+        new Cell([], 1, [30, 30, 30]),
+      ])).toEqual([20, 20, 20]);
+    });
+  });
+
   describe('#key', function() {
     const cell = new Cell([-3, 12]);
 

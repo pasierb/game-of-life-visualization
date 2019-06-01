@@ -10,6 +10,7 @@ const gui = new GUI();
 const options = {
   cellSize: 10,
   interval: 300,
+  color: [173, 216, 230],
 };
 
 window.addEventListener('load', function() {
@@ -22,4 +23,5 @@ window.addEventListener('load', function() {
   gui.add(state, 'paused').onFinishChange((isPaused) => {
     isPaused ? stop() : start();
   });
+  gui.addColor(options, 'color');
 });
