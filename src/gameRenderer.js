@@ -4,13 +4,17 @@ function createCellElement(cell) {
   const el = document.createElement('div');
 
   el.className = 'cell';
-  el.setAttribute('style', `
+  cellElementStyle(el, cell);
+
+  return el;
+}
+
+function cellElementStyle(element, cell) {
+  element.setAttribute('style', `
     --cell-x: ${cell.x};
     --cell-y: ${cell.y};
     --cell-color: rgb(${(cell.color || []).join(',')});
   `);
-
-  return el;
 }
 
 /**
