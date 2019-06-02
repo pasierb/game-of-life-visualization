@@ -37,9 +37,10 @@ window.addEventListener('load', function() {
 
   if (window.location.search) {
     try {
-      game = Game.parse(window.location.search.substr(1));
+      game = Game.parse(decodeURIComponent(window.location.search).substr(1));
     } catch (e) {
       console.error(e);
+      drawRandomSeed = true;
     }
   } else {
     drawRandomSeed = true;
