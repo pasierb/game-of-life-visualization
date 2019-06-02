@@ -52,6 +52,8 @@ header {
         display: grid;
         grid-template-columns: auto 50%;
         grid-column-gap: 1em;
+        padding: .5em;
+        background: rgba(255, 255, 255, 0.7);
 
         dd {
             margin: 0;
