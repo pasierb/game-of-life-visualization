@@ -31,7 +31,7 @@ class Cell {
     }, [0, 0, 0]);
 
     for (let i=0; i<color.length; i++) {
-      color[i] = color[i] / aliveNeighbours.length;
+      color[i] = Math.floor(color[i] / aliveNeighbours.length);
     }
 
     return color;
