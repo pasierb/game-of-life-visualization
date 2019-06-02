@@ -5,8 +5,12 @@ export default class Game {
     this.reset();
   }
 
-  add(cell) {
-    this._plain.set(cell.key, cell);
+  add(...cells) {
+    return cells.map((cell) => {
+      this._plain.set(cell.key, cell);
+
+      return cell;
+    });
   }
 
   remove(cell) {
@@ -96,12 +100,29 @@ export default class Game {
   }
 
   toString() {
-    const result = [];
+    const cells = [];
 
     for (const cell of this) {
-      result.push(cell.toString());
+      cells.push(cell.toString());
     }
 
-    return result.join('|');
+    return [this.age].concat(...this).join('|');
+  }
+
+  static parse(input) {
+    const [age, ...cellsInput] = input.split('|');
+    const cells = cellsInput.map(Cell.parse).filter((c) => c);
+    const game = new Game();
+
+    // legacy toString method did not exported age
+    if (isNaN(+age)) {
+      game.add(Cell.parse(age));
+    } else {
+      game._age = +age;
+    }
+
+    game.add(...cells);
+
+    return game;
   }
 }

@@ -72,11 +72,50 @@ describe('Game', function() {
     });
   });
 
-  describe('#getNeighboursCount', function() {});
+  describe('#tick', function() {
+    it.skip('should kill cells due to underpopulation', function() {});
+    it.skip('should kill cells due to overpopulation', function() {});
+    it.skip('should survive cells', function() {});
+    it.skip('should resurect cell', function() {});
+  });
 
-  describe('#tick', function() {});
+  describe('iterator', function() {
+    it.skip('should return instance of Iterator', function() {});
+  });
 
-  describe('iterator', function() {});
+  describe('activeCells', function() {
+    it.skip('should return all live cells and direct neighbours', function() {
+    });
+  });
 
-  describe('activeCells', function() {});
+  describe('parse', function() {
+    it('should set age', function() {
+      const game = Game.parse('34|');
+
+      expect(game.age).toEqual(34);
+    });
+
+    it('should parse cells', function() {
+      const game = Game.parse('34|34:12:1,2,3|33:34:2,3,4');
+
+      expect(game.size).toEqual(2);
+    });
+
+    it('should support legacy format', function() {
+      const game = Game.parse('34:12:1,2,3|33:34:2,3,4');
+
+      expect(game.age).toEqual(0);
+      expect(game.size).toEqual(2);
+    });
+  });
+
+  describe('toString', function() {
+    it('should serialize age', function() {
+      const game = new Game();
+      game.add(new Cell([0, 10], 1, [1, 2, 3]));
+      game.add(new Cell([20, 10], 1, [3, 4, 5]));
+
+      expect(game.toString()).toEqual('0|0:10:1,2,3|20:10:3,4,5');
+    });
+  });
 });
