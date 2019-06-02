@@ -1,7 +1,6 @@
 import {GUI} from 'dat.gui';
 
 import Game from './Game';
-import Cell from './Cell';
 import render from './gameRenderer';
 import seeds, {randomSeed} from './seeds';
 
