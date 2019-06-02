@@ -18,9 +18,19 @@ const options = {
   seed: seeds[initialSeedName],
 };
 
-function updateQuery(game) {
-  window.history.replaceState(null, null, `?${game}`);
-}
+const updateQuery = function(timeout) {
+  let handle;
+
+  return function(game) {
+    if (handle) return;
+
+    handle = setTimeout(() => {
+      window.history.replaceState(null, null, `?${game}`);
+
+      handle = clearTimeout(handle);
+    }, timeout);
+  };
+};
 
 window.addEventListener('load', function() {
   const root = document.getElementById('plain');
@@ -29,7 +39,7 @@ window.addEventListener('load', function() {
     start,
     stop,
     drawSeed,
-  } = render(root, game, options, updateQuery);
+  } = render(root, game, options, updateQuery(3000));
   const state = {paused: false};
 
   if (window.location.search) {
