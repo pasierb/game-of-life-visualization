@@ -14,6 +14,7 @@ export default class Game {
   }
 
   reset() {
+    this._age = 0;
     this._plain = new Map();
   }
 
@@ -33,6 +34,14 @@ export default class Game {
     }
 
     return Object.values(map);
+  }
+
+  get size() {
+    return this._plain.size;
+  }
+
+  get age() {
+    return this._age;
   }
 
   getNeighbours(cell, onlyActual) {
@@ -60,6 +69,10 @@ export default class Game {
   }
 
   tick() {
+    if (!this.activeCells.length) return;
+
+    this._age += 1;
+
     this.activeCells.map((cell) => {
       const neighbours = this.getNeighbours(cell);
 

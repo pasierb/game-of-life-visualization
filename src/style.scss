@@ -38,11 +38,29 @@ body {
     }
 }
 
-footer {
+header, footer {
     position: absolute;
-    bottom: 0;
     padding: 1em 2em;
     pointer-events: none;
+    padding: 1em 2em;
+}
+
+header {
+    top: 0;
+
+    .stats {
+        display: grid;
+        grid-template-columns: auto 50%;
+        grid-column-gap: 1em;
+
+        dd {
+            margin: 0;
+        }
+    }
+}
+
+footer {
+    bottom: 0;
 
     a {
         pointer-events: all;
