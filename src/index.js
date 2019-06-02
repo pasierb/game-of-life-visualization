@@ -18,6 +18,7 @@ const options = {
   seed: seeds[initialSeedName],
 };
 
+
 const updateQuery = function(timeout) {
   let handle;
 
@@ -33,14 +34,26 @@ const updateQuery = function(timeout) {
 };
 
 window.addEventListener('load', function() {
+  const debouncedUpdateQuery = updateQuery(3000);
+  const statAgesEl = document.getElementById('stats-ages');
+  const statLivesEl = document.getElementById('stats-lives');
   const root = document.getElementById('plain');
   const {
     setSpeed,
     start,
     stop,
     drawSeed,
-  } = render(root, game, options, updateQuery(3000));
+  } = render(root, game, options, onTick);
   const state = {paused: false};
+
+  function onTick(game) {
+    debouncedUpdateQuery(game);
+
+    requestAnimationFrame(function() {
+      statLivesEl.innerText = game.size;
+      statAgesEl.innerText = game.age;
+    });
+  }
 
   if (window.location.search) {
     try {
