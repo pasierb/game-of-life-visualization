@@ -8,7 +8,6 @@ import seeds, {randomSeed} from './seeds';
 import './style.scss';
 
 const initialSeedName = randomSeed();
-const game = new Game();
 const gui = new GUI();
 const options = {
   cellSize: 10,
@@ -34,6 +33,19 @@ const updateQuery = function(timeout) {
 };
 
 window.addEventListener('load', function() {
+  let game = new Game();
+  let drawRandomSeed = false;
+
+  if (window.location.search) {
+    try {
+      game = Game.parse(window.location.search.substr(1));
+    } catch (e) {
+      console.error(e);
+    }
+  } else {
+    drawRandomSeed = true;
+  }
+
   const debouncedUpdateQuery = updateQuery(3000);
   const statAgesEl = document.getElementById('stats-ages');
   const statLivesEl = document.getElementById('stats-lives');
@@ -46,6 +58,10 @@ window.addEventListener('load', function() {
   } = render(root, game, options, onTick);
   const state = {paused: false};
 
+  if (drawRandomSeed) {
+    drawSeed([20, 20], options.seed);
+  }
+
   function onTick(game) {
     debouncedUpdateQuery(game);
 
@@ -53,17 +69,6 @@ window.addEventListener('load', function() {
       statLivesEl.innerText = game.size;
       statAgesEl.innerText = game.age;
     });
-  }
-
-  if (window.location.search) {
-    try {
-      const cells = Cell.parse(window.location.search.substr(1));
-      cells.forEach((cell) => game.add(cell));
-    } catch (e) {
-      console.error(e);
-    }
-  } else {
-    drawSeed([20, 20], options.seed);
   }
 
   gui.add(options, 'interval', 100, 1000, 100).onFinishChange(setSpeed);

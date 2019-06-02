@@ -9,11 +9,9 @@ class Cell {
     const {
       color = [173, 216, 230],
     } = defaults;
-    return q.split('|').map((item) => {
-      const [x, y, c] = item.split(':');
 
-      return new Cell([+x, +y], 1, c ? c.split(',').map(Number) : color);
-    });
+    const [x, y, c] = q.split(':');
+    return new Cell([+x, +y], 1, c ? c.split(',').map(Number) : color);
   }
 
   static key([x, y]) {

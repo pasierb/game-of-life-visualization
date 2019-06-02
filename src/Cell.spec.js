@@ -24,30 +24,21 @@ describe('Cell', function() {
   describe('parse', function() {
     it('should parse single cell', function() {
       const input = '23:30:255,254,253';
-      const cells = Cell.parse(input);
+      const cell = Cell.parse(input);
 
-      expect(cells.length).toEqual(1);
-      expect(cells[0].x).toEqual(23);
-      expect(cells[0].y).toEqual(30);
-      expect(cells[0].color).toEqual([255, 254, 253]);
-    });
-
-    it('should parse multiple cells', function() {
-      const input = '23:30:255,254,253|45:55:0,1,2';
-      const cells = Cell.parse(input);
-
-      expect(cells.length).toEqual(2);
+      expect(cell.x).toEqual(23);
+      expect(cell.y).toEqual(30);
+      expect(cell.color).toEqual([255, 254, 253]);
     });
 
     it('should set default color', function() {
       const defaults = {color: [255, 254, 253]};
       const input = '23:30';
-      const cells = Cell.parse(input, defaults);
+      const cell = Cell.parse(input, defaults);
 
-      expect(cells.length).toEqual(1);
-      expect(cells[0].x).toEqual(23);
-      expect(cells[0].y).toEqual(30);
-      expect(cells[0].color).toEqual([255, 254, 253]);
+      expect(cell.x).toEqual(23);
+      expect(cell.y).toEqual(30);
+      expect(cell.color).toEqual([255, 254, 253]);
     });
   });
 
