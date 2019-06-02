@@ -24,9 +24,10 @@ function cellElementStyle(element, cell) {
  * @param {object} options
  * @param {number} options.cellSize
  * @param {number} options.interval
+ * @param {function} callback
  * @return {Void}
  */
-function renderer(el, game, options) {
+function renderer(el, game, options, callback) {
   let isDrawing = false;
   let drawStartCoords;
   let drawItems = {};
@@ -136,6 +137,7 @@ function renderer(el, game, options) {
       if (isDrawing) return;
 
       game.tick();
+      if (callback) callback(game);
       requestAnimationFrame(update);
     }, options.interval);
   }

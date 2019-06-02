@@ -5,6 +5,17 @@ class Cell {
     this.color = color;
   }
 
+  static parse(q, defaults = {}) {
+    const {
+      color = [173, 216, 230],
+    } = defaults;
+    return q.split('|').map((item) => {
+      const [x, y, c] = item.split(':');
+
+      return new Cell([+x, +y], 1, c ? c.split(',').map(Number) : color);
+    });
+  }
+
   static key([x, y]) {
     return `${x}:${y}`;
   }
@@ -28,6 +39,10 @@ class Cell {
 
   get key() {
     return Cell.key([this.x, this.y]);
+  }
+
+  toString() {
+    return `${this.x}:${this.y}:${this.color.toString()}`;
   }
 }
 

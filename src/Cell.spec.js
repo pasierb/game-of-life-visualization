@@ -21,6 +21,36 @@ describe('Cell', function() {
     });
   });
 
+  describe('parse', function() {
+    it('should parse single cell', function() {
+      const input = '23:30:255,254,253';
+      const cells = Cell.parse(input);
+
+      expect(cells.length).toEqual(1);
+      expect(cells[0].x).toEqual(23);
+      expect(cells[0].y).toEqual(30);
+      expect(cells[0].color).toEqual([255, 254, 253]);
+    });
+
+    it('should parse multiple cells', function() {
+      const input = '23:30:255,254,253|45:55:0,1,2';
+      const cells = Cell.parse(input);
+
+      expect(cells.length).toEqual(2);
+    });
+
+    it('should set default color', function() {
+      const defaults = {color: [255, 254, 253]};
+      const input = '23:30';
+      const cells = Cell.parse(input, defaults);
+
+      expect(cells.length).toEqual(1);
+      expect(cells[0].x).toEqual(23);
+      expect(cells[0].y).toEqual(30);
+      expect(cells[0].color).toEqual([255, 254, 253]);
+    });
+  });
+
   describe('colorFrom', function() {
     it('should generate color provided cells', function() {
       expect(Cell.colorFrom([
@@ -46,5 +76,11 @@ describe('Cell', function() {
     it('should return key based on coords', function() {
       expect(cell.key).toEqual('-3:12');
     });
+  });
+
+  describe('#toString', function() {
+    const cell = new Cell([12, 21], 1, [123, 124, 125]);
+
+    expect(cell.toString()).toEqual('12:21:123,124,125');
   });
 });

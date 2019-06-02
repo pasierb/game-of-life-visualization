@@ -1,6 +1,7 @@
 import {GUI} from 'dat.gui';
 
 import Game from './Game';
+import Cell from './Cell';
 import render from './gameRenderer';
 import seeds, {randomSeed} from './seeds';
 
@@ -17,12 +18,30 @@ const options = {
   seed: seeds[initialSeedName],
 };
 
+function updateQuery(game) {
+  window.history.replaceState(null, null, `?${game}`);
+}
+
 window.addEventListener('load', function() {
   const root = document.getElementById('plain');
-  const {setSpeed, start, stop, drawSeed} = render(root, game, options);
+  const {
+    setSpeed,
+    start,
+    stop,
+    drawSeed,
+  } = render(root, game, options, updateQuery);
   const state = {paused: false};
 
-  drawSeed([20, 20], options.seed);
+  if (window.location.search) {
+    try {
+      const cells = Cell.parse(window.location.search.substr(1));
+      cells.forEach((cell) => game.add(cell));
+    } catch (e) {
+      console.error(e);
+    }
+  } else {
+    drawSeed([20, 20], options.seed);
+  }
 
   gui.add(options, 'interval', 100, 1000, 100).onFinishChange(setSpeed);
   gui.add({reset: () => game.reset()}, 'reset');

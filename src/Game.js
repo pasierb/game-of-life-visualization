@@ -81,4 +81,14 @@ export default class Game {
       }
     });
   }
+
+  toString() {
+    const result = [];
+
+    for (const cell of this) {
+      result.push(cell.toString());
+    }
+
+    return result.join('|');
+  }
 }
